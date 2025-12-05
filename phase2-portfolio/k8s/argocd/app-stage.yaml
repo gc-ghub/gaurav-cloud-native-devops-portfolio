@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/gc-ghub/gaurav-cloud-native-devops-portfolio.git
     targetRevision: stage
-    path: phase2-portfolio/k8s
+    path: phase2-portfolio/k8s/base/kustomization.yaml
 
   destination:
     server: https://kubernetes.default.svc
