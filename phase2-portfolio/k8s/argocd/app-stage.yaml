@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: portfolio-stage
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/gc-ghub/gaurav-cloud-native-devops-portfolio.git
+    targetRevision: stage
+    path: phase2-portfolio/k8s
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: stage
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
