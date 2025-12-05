@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: dockergc00/portfolio-frontend:v1
+          image: dockergc00/portfolio-frontend:3463c79
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
