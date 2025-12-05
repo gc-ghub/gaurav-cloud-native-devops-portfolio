@@ -1,36 +1,37 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Node apps
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+build/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env*.local
+# Env files
 .env
+.env.local
+.env.*.local
 
-# vercel
-.vercel
+# VSCode / IDE
+.vscode/
+.idea/
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# OS files
+.DS_Store
+Thumbs.db
+
+# Kubernetes
+*.log
+*.out
+
+# Helm 
+helm/portfolio-backend/charts/
+helm/portfolio-frontend/charts/
+
+# Certificates / Keys
+*.pem
+*.key
+
+# Docker
+.dockerignore
+
+# Git
+.gitignore

@@ -1,0 +1,49 @@
+# ---------------------------
+# 1. Use official Node image
+# Using LTS Node version (Alpine Linux)→ lightweight (~5MB), Good for small image sizes.
+# ---------------------------
+FROM node:18-alpine
+
+
+# ---------------------------
+# 2. Set working directory
+# Create & switche to /app. Everything inside the container lives here.
+# ---------------------------
+WORKDIR /app
+
+
+# ---------------------------
+# 3. Copy package.json first
+# 📌 Best practice: Copying package.json first allows Docker to cache npm install step if dependencies don't change.
+# ---------------------------
+COPY package*.json ./
+
+
+# ---------------------------
+# 4. Install production dependencies
+# Using --production flag to avoid installing devDependencies.
+# ---------------------------
+RUN npm install --production
+
+
+
+# ---------------------------
+# 5. Copy rest of the code
+# Copy all source code into the container.
+# ---------------------------
+COPY . .
+
+
+# ---------------------------
+# 6. Expose backend port
+# Backend server will run on port 5000.
+# ---------------------------
+EXPOSE 5000
+
+
+# ---------------------------
+# 7. Command to start backend
+# Start the Node.js server using index.js. 
+# This launches backend server when container starts.
+# ---------------------------
+CMD ["node", "index.js"]

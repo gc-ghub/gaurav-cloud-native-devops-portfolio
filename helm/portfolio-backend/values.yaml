@@ -1,0 +1,14 @@
+replicaCount: 1
+
+image:
+  repository: dockergc00/portfolio-backend
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 5000
+
+resources: {}
+
+labels:
+  app: portfolio-backend

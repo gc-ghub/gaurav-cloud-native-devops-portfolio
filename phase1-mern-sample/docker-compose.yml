@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend # Build backend service
+      dockerfile: Dockerfile.backend
+    container_name: backend
+    ports:
+      - "5000:5000" # Map host port 5000 to container port 5000
+
+  frontend:
+    build:
+      context: ./frontend # Build frontend service
+      dockerfile: Dockerfile.frontend
+    container_name: frontend 
+    ports:
+      - "5173:80" # Map host port 5173 to container port 80
+    depends_on: # Ensure backend starts before frontend
+      - backend

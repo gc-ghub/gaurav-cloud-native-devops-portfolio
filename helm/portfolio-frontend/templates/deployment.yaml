@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "portfolio-frontend"
+  labels:
+    app: portfolio-frontend
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: portfolio-frontend
+
+  template:
+    metadata:
+      labels:
+        app: portfolio-frontend
+
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          ports:
+            - containerPort: {{ .Values.service.port }}
+              name: http
+
+          env:
+            - name: BACKEND_URL
+              value: |
+                {{ printf "http://%s:%d%s" .Values.backend.host (int .Values.backend.port) .Values.backend.path }}
+          resources:
+              {{ toYaml .Values.resources | indent 12 }}
