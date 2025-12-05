@@ -1,37 +1,62 @@
-# Node apps
-node_modules/
-npm-debug.log
-yarn-error.log
-dist/
-build/
+# -------------------------------------------------------------------
+# Node / Next.js (Frontend)
+# -------------------------------------------------------------------
+phase2-portfolio/frontend/node_modules/
+phase2-portfolio/frontend/.next/
+phase2-portfolio/frontend/out/
+phase2-portfolio/frontend/dist/
+phase2-portfolio/frontend/build/
+phase2-portfolio/frontend/npm-debug.log
+phase2-portfolio/frontend/yarn-error.log
 
-# Env files
-.env
-.env.local
-.env.*.local
+# Environment files
+phase2-portfolio/frontend/.env
+phase2-portfolio/frontend/.env.local
+phase2-portfolio/frontend/.env.*.local
 
-# VSCode / IDE
-.vscode/
-.idea/
+# -------------------------------------------------------------------
+# Backend (Node / Express)
+# -------------------------------------------------------------------
+phase2-portfolio/backend-v1/node_modules/
+phase2-portfolio/backend-v1/npm-debug.log
+phase2-portfolio/backend-v2/node_modules/
+phase2-portfolio/backend-v2/npm-debug.log
 
-# OS files
-.DS_Store
-Thumbs.db
+phase2-portfolio/backend-v1/.env
+phase2-portfolio/backend-v2/.env
 
-# Kubernetes
+# -------------------------------------------------------------------
+# Kubernetes logs
+# -------------------------------------------------------------------
 *.log
 *.out
 
-# Helm 
-helm/portfolio-backend/charts/
-helm/portfolio-frontend/charts/
+# -------------------------------------------------------------------
+# Helm
+# Do NOT ignore charts/ folder unless it's empty
+# -------------------------------------------------------------------
+helm/*/charts/
 
+# -------------------------------------------------------------------
 # Certificates / Keys
+# -------------------------------------------------------------------
 *.pem
 *.key
 
+# -------------------------------------------------------------------
 # Docker
+# -------------------------------------------------------------------
 .dockerignore
 
-# Git
+# -------------------------------------------------------------------
+# OS / Editor
+# -------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# -------------------------------------------------------------------
+# Git internal
+# -------------------------------------------------------------------
 .gitignore
