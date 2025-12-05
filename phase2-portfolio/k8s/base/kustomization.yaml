@@ -1,0 +1,14 @@
+# phase2-portfolio/k8s/base/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../backend/backend-service.yaml
+  - ../backend/backend-v1/deployment.yaml
+  - ../backend/backend-v2/deployment.yaml
+  - ../frontend/deployment.yaml
+  - ../frontend/service.yaml
+  - ../istio/frontend-gateway.yaml
+  - ../istio/frontend-virtualservice.yaml
+  - ../istio/portfolio-backend-destinationrule.yaml
+  - ../istio/portfolio-backend-virtualservice.yaml
