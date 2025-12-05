@@ -1,0 +1,45 @@
+name: Frontend CI Pipeline
+
+on:
+  push:
+    paths:
+      - "phase2-portfolio/frontend/**"
+      - ".github/workflows/frontend-ci.yaml"
+    branches:
+      - dev
+      - stage
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Docker Image Tag
+        id: vars
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
+            echo "TAG=dev" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF_NAME}" == "stage" ]]; then
+            echo "TAG=stage" >> $GITHUB_OUTPUT
+          else
+            echo "TAG=latest" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build frontend image
+        run: |
+          docker build -t dockergc00/portfolio-frontend:${{ steps.vars.outputs.TAG }} \
+            phase2-portfolio/frontend
+
+      - name: Push to Docker Hub
+        run: |
+          docker push dockergc00/portfolio-frontend:${{ steps.vars.outputs.TAG }}
