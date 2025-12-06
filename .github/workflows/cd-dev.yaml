@@ -1,41 +1,47 @@
 name: CD - Dev Deployment
-
 on:
   push:
     branches:
       - dev
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   deploy-dev:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Git
-      run: |
-        git config --global user.email "github-actions@github.com"
-        git config --global user.name "GitHub Actions"
+      - name: Set git user
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
 
-    - name: Extract short SHA
-      id: vars
-      run: echo "SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
+      - name: Extract short SHA
+        id: vars
+        run: echo "SHA=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
 
-    - name: Update backend-v1 image tag
-      run: |
-        sed -i "s|image: .*backend-v1:.*|image: dockergc00/portfolio-backend-v1:${{ steps.vars.outputs.SHA }}|" phase2-portfolio/k8s/backend-v1/deployment.yaml
+      - name: Update backend-v1 image tag
+        run: |
+          sed -i "s|image: .*portfolio-backend-v1:.*|image: ${DOCKERHUB_USERNAME}/portfolio-backend-v1:${{ steps.vars.outputs.SHA }}|" phase2-portfolio/k8s/backend-v1/deployment.yaml
 
-    - name: Update backend-v2 image tag
-      run: |
-        sed -i "s|image: .*backend-v2:.*|image: dockergc00/portfolio-backend-v2:${{ steps.vars.outputs.SHA }}|" phase2-portfolio/k8s/backend-v2/deployment.yaml
+      - name: Update backend-v2 image tag
+        run: |
+          sed -i "s|image: .*portfolio-backend-v2:.*|image: ${DOCKERHUB_USERNAME}/portfolio-backend-v2:${{ steps.vars.outputs.SHA }}|" phase2-portfolio/k8s/backend-v2/deployment.yaml
 
-    - name: Update frontend image tag
-      run: |
-        sed -i "s|image: .*portfolio-frontend:.*|image: dockergc00/portfolio-frontend:${{ steps.vars.outputs.SHA }}|" phase2-portfolio/k8s/frontend/deployment.yaml
+      - name: Update frontend image tag
+        run: |
+          sed -i "s|image: .*portfolio-frontend:.*|image: ${DOCKERHUB_USERNAME}/portfolio-frontend:${{ steps.vars.outputs.SHA }}|" phase2-portfolio/k8s/frontend/deployment.yaml
 
-    - name: Commit & push
-      run: |
-        git add .
-        git commit -m "CD: Update images for dev (${{ steps.vars.outputs.SHA }})" || echo "No changes to commit"
-        git push origin dev
+      - name: Commit & push changes
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          git add phase2-portfolio/k8s/backend-v1/deployment.yaml phase2-portfolio/k8s/backend-v2/deployment.yaml phase2-portfolio/k8s/frontend/deployment.yaml || true
+          git commit -m "CD: Update images for dev (${{ steps.vars.outputs.SHA }})" || echo "No changes to commit"
+          git push origin dev

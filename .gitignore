@@ -1,44 +1,44 @@
 # -------------------------------------------------------------------
-# Node / Next.js (Frontend)
+# Frontend - MERN (Next.js / React / Vite depending on your setup)
 # -------------------------------------------------------------------
-phase2-portfolio/frontend/node_modules/
-phase2-portfolio/frontend/.next/
-phase2-portfolio/frontend/out/
-phase2-portfolio/frontend/dist/
-phase2-portfolio/frontend/build/
-phase2-portfolio/frontend/npm-debug.log
-phase2-portfolio/frontend/yarn-error.log
+phase2-portfolio/app/frontend/node_modules/
+phase2-portfolio/app/frontend/.next/
+phase2-portfolio/app/frontend/dist/
+phase2-portfolio/app/frontend/build/
+phase2-portfolio/app/frontend/out/
+phase2-portfolio/app/frontend/npm-debug.log
+phase2-portfolio/app/frontend/yarn-error.log
 
 # Environment files
-phase2-portfolio/frontend/.env
-phase2-portfolio/frontend/.env.local
-phase2-portfolio/frontend/.env.*.local
+phase2-portfolio/app/frontend/.env
+phase2-portfolio/app/frontend/.env.local
+phase2-portfolio/app/frontend/.env.*.local
 
 # -------------------------------------------------------------------
-# Backend (Node / Express)
+# Backend - Node/Express (v1 & v2)
 # -------------------------------------------------------------------
-phase2-portfolio/backend-v1/node_modules/
-phase2-portfolio/backend-v1/npm-debug.log
-phase2-portfolio/backend-v2/node_modules/
-phase2-portfolio/backend-v2/npm-debug.log
+phase2-portfolio/app/backend-v1/node_modules/
+phase2-portfolio/app/backend-v1/npm-debug.log
+phase2-portfolio/app/backend-v1/.env
 
-phase2-portfolio/backend-v1/.env
-phase2-portfolio/backend-v2/.env
+phase2-portfolio/app/backend-v2/node_modules/
+phase2-portfolio/app/backend-v2/npm-debug.log
+phase2-portfolio/app/backend-v2/.env
 
 # -------------------------------------------------------------------
-# Kubernetes logs
+# Kubernetes logs / local outputs
 # -------------------------------------------------------------------
 *.log
 *.out
 
 # -------------------------------------------------------------------
 # Helm
-# Do NOT ignore charts/ folder unless it's empty
+# Ignore generated chart artifacts but NOT your chart sources
 # -------------------------------------------------------------------
 helm/*/charts/
 
 # -------------------------------------------------------------------
-# Certificates / Keys
+# Certificates / Keys (never commit secrets)
 # -------------------------------------------------------------------
 *.pem
 *.key
@@ -49,7 +49,7 @@ helm/*/charts/
 .dockerignore
 
 # -------------------------------------------------------------------
-# OS / Editor
+# OS / Editor junk files
 # -------------------------------------------------------------------
 .DS_Store
 Thumbs.db
@@ -57,6 +57,6 @@ Thumbs.db
 .idea/
 
 # -------------------------------------------------------------------
-# Git internal
+# Git internal (don’t remove!)
 # -------------------------------------------------------------------
 .gitignore
