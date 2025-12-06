@@ -32,7 +32,7 @@ jobs:
       # -------------------------------
       - name: Update backend-v1 image tag
         run: |
-          sed -i "s|image: .*portfolio-backend-v1:.*|image: ${DOCKERHUB_USERNAME}/portfolio-backend-v1:${{ steps.vars.outputs.SHA }}|" \
+          sed -i "s|image: .*portfolio-backend:v1.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend:v1-${{ steps.vars.outputs.SHA }}|" \
           phase2-portfolio/k8s/base/backend/deployment.yaml
 
       # -------------------------------
@@ -49,7 +49,7 @@ jobs:
       - name: Update backend-v3 image tag
         run: |
           sed -i "s|image: .*portfolio-backend-v3:.*|image: ${DOCKERHUB_USERNAME}/portfolio-backend-v3:${{ steps.vars.outputs.SHA }}|" \
-          phase2-portfolio/k8s/backend-v3/deployment.yaml
+          phase2-portfolio/k8s/backend/deployment.yaml
 
       # -------------------------------
       # Update frontend
