@@ -1,37 +1,28 @@
-name: Frontend CI Pipeline
+name: Backend CI Pipeline
 
 on:
   push:
+    paths:
+      - "phase2-portfolio/app/backend-v1/**"
+      - "phase2-portfolio/app/backend-v2/**"
+      - "phase2-portfolio/app/backend-v3/**"
+      - ".github/workflows/backend-ci.yaml"
     branches:
       - dev
       - stage
       - main
-    paths:
-      - "phase2-portfolio/app/frontend/**"
-      - ".github/workflows/frontend-ci.yaml"
-
-permissions:
-  contents: read
-  packages: write
 
 jobs:
-  build-frontend:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set Docker Tag based on branch
+      - name: Extract short SHA
         id: vars
-        run: |
-          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
-            echo "TAG=dev-$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
-          elif [[ "${GITHUB_REF_NAME}" == "stage" ]]; then
-            echo "TAG=stage-$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
-          else
-            echo "TAG=latest" >> $GITHUB_OUTPUT
-          fi
+        run: echo "TAG=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -39,15 +30,29 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      ###############################################
-      # FRONTEND BUILD & PUSH
-      ###############################################
-      - name: Build frontend image
+      # Build & Push backend-v1
+      - name: Build backend-v1
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-frontend:${{ steps.vars.outputs.TAG }} \
-          -f phase2-portfolio/app/frontend/Dockerfile \
-          phase2-portfolio/app/frontend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend-v1:${{ steps.vars.outputs.TAG }} \
+            -f phase2-portfolio/app/backend-v1/Dockerfile \
+            phase2-portfolio/app/backend-v1
 
-      - name: Push frontend image
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend-v1:${{ steps.vars.outputs.TAG }}
+
+      # Build & Push backend-v2
+      - name: Build backend-v2
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-frontend:${{ steps.vars.outputs.TAG }}
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend-v2:${{ steps.vars.outputs.TAG }} \
+            -f phase2-portfolio/app/backend-v2/Dockerfile \
+            phase2-portfolio/app/backend-v2
+
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend-v2:${{ steps.vars.outputs.TAG }}
+
+      # Build & Push backend-v3
+      - name: Build backend-v3
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend-v3:${{ steps.vars.outputs.TAG }} \
+            -f phase2-portfolio/app/backend-v3/Dockerfile \
+            phase2-portfolio/app/backend-v3
+
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend-v3:${{ steps.vars.outputs.TAG }}

@@ -1,43 +1,37 @@
-name: CI - Frontend Build & Push
+name: Frontend CI Pipeline
+
 on:
   push:
     paths:
-      - 'phase2-portfolio/app/frontend/**'
-      - 'phase2-portfolio/helm/**'
-      - 'Dockerfile.frontend'
-permissions:
-  contents: read
+      - "phase2-portfolio/app/frontend/**"
+      - ".github/workflows/frontend-ci.yaml"
+    branches:
+      - dev
+      - stage
+      - main
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract short SHA
+        id: vars
+        run: echo "TAG=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract short SHA
-        id: vars
-        run: echo "SHA=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
-
-      - name: Build & push frontend
+      - name: Build frontend image
         run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/portfolio-frontend:${{ steps.vars.outputs.SHA }}"
-          docker build -t "$IMAGE" phase2-portfolio/app/frontend
-          docker push "$IMAGE"
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-frontend:${{ steps.vars.outputs.TAG }} \
+            -f phase2-portfolio/app/frontend/Dockerfile \
+            phase2-portfolio/app/frontend
 
-      - name: Upload SHA for other jobs (optional)
-        uses: actions/upload-artifact@v4
-        with:
-          name: image-sha
-          path: |
-            <(echo ${{ steps.vars.outputs.SHA }})
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-frontend:${{ steps.vars.outputs.TAG }}
