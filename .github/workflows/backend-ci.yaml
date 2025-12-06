@@ -1,13 +1,14 @@
 name: CI - Backend Build & Push
+
 on:
   push:
     paths:
       - 'phase2-portfolio/app/backend-v1/**'
       - 'phase2-portfolio/app/backend-v2/**'
-      - 'phase2-portfolio/helm/**'
-      - 'Dockerfile.backend'
-permissions:
-  contents: read
+      - 'phase2-portfolio/app/backend-v3/**'
+      - 'Dockerfile*'
+    branches:
+      - main
 
 jobs:
   build-and-push:
@@ -16,37 +17,38 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up QEMU (multiarch support)
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract short SHA
-        id: vars
-        run: echo "SHA=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
-
-      - name: Build & push backend-v1
+      # Backend v1
+      - name: Build backend v1
         run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend-v1:${{ steps.vars.outputs.SHA }}"
-          docker build -t "$IMAGE" phase2-portfolio/app/backend-v1
-          docker push "$IMAGE"
+          docker build -t dockergc00/portfolio-backend-v1:prod \
+            -f phase2-portfolio/app/backend-v1/Dockerfile \
+            phase2-portfolio/app/backend-v1
 
-      - name: Build & push backend-v2
+      - name: Push backend v1
+        run: docker push dockergc00/portfolio-backend-v1:prod
+
+      # Backend v2
+      - name: Build backend v2
         run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend-v2:${{ steps.vars.outputs.SHA }}"
-          docker build -t "$IMAGE" phase2-portfolio/app/backend-v2
-          docker push "$IMAGE"
+          docker build -t dockergc00/portfolio-backend-v2:prod \
+            -f phase2-portfolio/app/backend-v2/Dockerfile \
+            phase2-portfolio/app/backend-v2
 
-      - name: Upload SHA for other jobs (optional)
-        uses: actions/upload-artifact@v4
-        with:
-          name: image-sha
-          path: |
-            <(echo ${{ steps.vars.outputs.SHA }}) # placeholder - mainly you can reuse SHA in CD
+      - name: Push backend v2
+        run: docker push dockergc00/portfolio-backend-v2:prod
+
+      # Backend v3
+      - name: Build backend v3
+        run: |
+          docker build -t dockergc00/portfolio-backend-v3:prod \
+            -f phase2-portfolio/app/backend-v3/Dockerfile \
+            phase2-portfolio/app/backend-v3
+
+      - name: Push backend v3
+        run: docker push dockergc00/portfolio-backend-v3:prod
