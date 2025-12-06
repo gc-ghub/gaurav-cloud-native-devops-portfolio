@@ -1,52 +1,53 @@
-name: CI - Backend Build & Push
+name: Frontend CI Pipeline
+
 on:
   push:
+    branches:
+      - dev
+      - stage
+      - main
     paths:
-      - 'phase2-portfolio/app/backend-v1/**'
-      - 'phase2-portfolio/app/backend-v2/**'
-      - 'phase2-portfolio/helm/**'
-      - 'Dockerfile.backend'
+      - "phase2-portfolio/app/frontend/**"
+      - ".github/workflows/frontend-ci.yaml"
+
 permissions:
   contents: read
+  packages: write
 
 jobs:
-  build-and-push:
+  build-frontend:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up QEMU (multiarch support)
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Set Docker Tag based on branch
+        id: vars
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
+            echo "TAG=dev-$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF_NAME}" == "stage" ]]; then
+            echo "TAG=stage-$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
+          else
+            echo "TAG=latest" >> $GITHUB_OUTPUT
+          fi
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract short SHA
-        id: vars
-        run: echo "SHA=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
-
-      - name: Build & push backend-v1
+      ###############################################
+      # FRONTEND BUILD & PUSH
+      ###############################################
+      - name: Build frontend image
         run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend-v1:${{ steps.vars.outputs.SHA }}"
-          docker build -t "$IMAGE" phase2-portfolio/app/backend-v1
-          docker push "$IMAGE"
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-frontend:${{ steps.vars.outputs.TAG }} \
+          -f phase2-portfolio/app/frontend/Dockerfile \
+          phase2-portfolio/app/frontend
 
-      - name: Build & push backend-v2
+      - name: Push frontend image
         run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/portfolio-backend-v2:${{ steps.vars.outputs.SHA }}"
-          docker build -t "$IMAGE" phase2-portfolio/app/backend-v2
-          docker push "$IMAGE"
-
-      - name: Upload SHA for other jobs (optional)
-        uses: actions/upload-artifact@v4
-        with:
-          name: image-sha
-          path: |
-            <(echo ${{ steps.vars.outputs.SHA }}) # placeholder - mainly you can reuse SHA in CD
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/portfolio-frontend:${{ steps.vars.outputs.TAG }}
