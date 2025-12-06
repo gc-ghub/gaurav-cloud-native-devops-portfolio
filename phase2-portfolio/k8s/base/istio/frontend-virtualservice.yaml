@@ -1,16 +1,18 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: portfolio-frontend-external
-  namespace: dev
+  name: portfolio-frontend-vs
 spec:
-  gateways:
-  - portfolio-gateway
   hosts:
-  - "*"
+    - "*"
+  gateways:
+    - portfolio-frontend-gateway
   http:
-  - route:
-    - destination:
-        host: portfolio-frontend.dev.svc.cluster.local
-        port:
-          number: 3000
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: portfolio-frontend
+            port:
+              number: 3000

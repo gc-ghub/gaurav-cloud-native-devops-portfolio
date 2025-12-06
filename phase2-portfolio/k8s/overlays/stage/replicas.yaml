@@ -15,6 +15,13 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: backend-v3
+spec:
+  replicas: 2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: portfolio-frontend
 spec:
   replicas: 2
