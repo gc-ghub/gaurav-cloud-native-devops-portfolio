@@ -9,20 +9,19 @@ spec:
   gateways:
     - portfolio-gateway
   http:
-
-    # Backend routes
+    # 1️⃣ Backend route must come FIRST — highest priority
     - match:
         - uri:
             prefix: /api
       route:
         {{- range .Values.backend.versions }}
         - destination:
-            host: {{ $.Values.backend.name }}
+            host: portfolio-backend
             subset: {{ .name }}
           weight: {{ .weight }}
         {{- end }}
 
-    # Frontend route
+    # 2️⃣ Frontend handler must come LAST — catch all
     - match:
         - uri:
             prefix: /
