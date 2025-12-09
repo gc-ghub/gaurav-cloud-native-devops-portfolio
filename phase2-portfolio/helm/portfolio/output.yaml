@@ -1,0 +1,215 @@
+---
+# Source: portfolio/templates/virtualservice.yaml
+
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: portfolio-virtualservice
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - portfolio-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: portfolio-backend
+            subset: v1
+          weight: 70
+        - destination:
+            host: portfolio-backend
+            subset: v2
+          weight: 20
+        - destination:
+            host: portfolio-backend
+            subset: v3
+          weight: 10
+
+---
+# Source: portfolio/templates/service.yaml
+############################################
+# FRONTEND SERVICE
+############################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: portfolio-frontend
+  labels:
+    app: portfolio-frontend
+spec:
+  selector:
+    app: portfolio-frontend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3000
+
+---
+
+############################################
+# BACKEND SERVICE (shared for all versions)
+############################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: portfolio-backend
+  labels:
+    app: portfolio-backend
+spec:
+  selector:
+    app: portfolio-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5000
+      targetPort: 5000
+
+---
+# Source: portfolio/templates/istio-gateway.yaml
+
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: portfolio-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - *
+
+---
+# Source: portfolio/templates/destination-rule.yaml
+
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: portfolio-backend
+spec:
+  host: portfolio-backend
+  subsets:
+    - name: v1
+      labels:
+        version: v1
+    - name: v2
+      labels:
+        version: v2
+    - name: v3
+      labels:
+        version: v3
+
+---
+# Source: portfolio/templates/deployment.yaml
+############################################
+# FRONTEND DEPLOYMENT
+############################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-frontend
+  labels:
+    app: portfolio-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio-frontend
+  template:
+    metadata:
+      labels:
+        app: portfolio-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: "dockergc00/gc-devops-portfolio-frontend:v1"
+        ports:
+        - containerPort: 3000
+
+---
+
+############################################
+# BACKEND DEPLOYMENTS (v1, v2, v3)
+############################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-backend-v1
+  labels:
+    app: portfolio-backend
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio-backend
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: portfolio-backend
+        version: v1
+    spec:
+      containers:
+      - name: backend
+        image: "dockergc00/gc-devops-portfolio-backend-v1:v1"
+        ports:
+        - containerPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-backend-v2
+  labels:
+    app: portfolio-backend
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio-backend
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: portfolio-backend
+        version: v2
+    spec:
+      containers:
+      - name: backend
+        image: "dockergc00/gc-devops-portfolio-backend-v2:v1"
+        ports:
+        - containerPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-backend-v3
+  labels:
+    app: portfolio-backend
+    version: v3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio-backend
+      version: v3
+  template:
+    metadata:
+      labels:
+        app: portfolio-backend
+        version: v3
+    spec:
+      containers:
+      - name: backend
+        image: "dockergc00/gc-devops-portfolio-backend-v3:v1"
+        ports:
+        - containerPort: 5000
+---

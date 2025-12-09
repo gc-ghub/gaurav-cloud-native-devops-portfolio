@@ -1,0 +1,57 @@
+############################################
+# FRONTEND DEPLOYMENT
+############################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.frontend.name }}
+  labels:
+    app: {{ .Values.frontend.name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.frontend.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.frontend.name }}
+    spec:
+      containers:
+      - name: frontend
+        image: "{{ .Values.frontend.image }}:{{ .Values.frontend.tag }}"
+        ports:
+        - containerPort: {{ .Values.frontend.port }}
+
+---
+
+############################################
+# BACKEND DEPLOYMENTS (v1, v2, v3)
+############################################
+{{- range .Values.backend.versions }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Values.backend.name }}-{{ .name }}
+  labels:
+    app: {{ $.Values.backend.name }}
+    version: {{ .name }}
+spec:
+  replicas: {{ $.Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $.Values.backend.name }}
+      version: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $.Values.backend.name }}
+        version: {{ .name }}
+    spec:
+      containers:
+      - name: backend
+        image: "{{ .image }}:{{ .tag }}"
+        ports:
+        - containerPort: {{ $.Values.backend.port }}
+---
+{{- end }}
