@@ -10,7 +10,7 @@ export default function Home() {
 
   useEffect(() => {
     axios
-      .get("/api/backend")
+      .get("/api/data")
       .then((res) => setData(res.data))
       .catch((err) => {
         console.error(err);
