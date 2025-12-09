@@ -1,0 +1,14 @@
+name: Backend v2 CI
+
+on:
+  push:
+    paths:
+      - "phase2-portfolio/app/backend-v2/**"
+
+jobs:
+  backend-v2:
+    uses: ./.github/workflows/backend-ci-template.yml
+    with:
+      service: backend-v2
+      version: v2
+      image: dockergc00/gc-devops-portfolio-backend-v2

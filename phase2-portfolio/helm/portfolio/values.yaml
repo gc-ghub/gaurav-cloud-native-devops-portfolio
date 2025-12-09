@@ -3,6 +3,8 @@
 
 replicaCount: 1 
 
+imageRegistry: dockergc00
+
 frontend:
   name: portfolio-frontend
   image: dockergc00/gc-devops-portfolio-frontend

@@ -1,0 +1,14 @@
+name: Backend v3 CI
+
+on:
+  push:
+    paths:
+      - "phase2-portfolio/app/backend-v3/**"
+
+jobs:
+  backend-v3:
+    uses: ./.github/workflows/backend-ci-template.yml
+    with:
+      service: backend-v3
+      version: v3
+      image: dockergc00/gc-devops-portfolio-backend-v3

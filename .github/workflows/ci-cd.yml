@@ -1,0 +1,111 @@
+name: CI/CD — Build, Push, Update Helm
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  IMAGE_NAMESPACE: ${{ secrets.IMAGE_NAMESPACE || 'dockergc00' }}
+  HELM_VALUES_PATH: "phase2-portfolio/helm/portfolio/values.yaml"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Determine identifiers
+        id: id
+        run: |
+          echo "sha_short=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_OUTPUT
+          echo "timestamp=$(date -u +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+
+      # Build & push frontend image
+      - name: Build and push frontend image
+        run: |
+          IMAGE=${{ env.IMAGE_NAMESPACE }}/gc-devops-portfolio-frontend:${{ steps.id.outputs.sha_short }}
+          echo "Building $IMAGE"
+          docker build -f ./phase2-portfolio/app/frontend/Dockerfile \
+            -t "$IMAGE" \
+            ./phase2-portfolio/app/frontend
+          docker push "$IMAGE"
+        
+
+      # Build & push backend v1, v2, v3 images 
+      - name: Build and push backend v1 image
+        run: |
+          IMAGE=${{ env.IMAGE_NAMESPACE }}/gc-devops-portfolio-backend-v1:${{ steps.id.outputs.sha_short }}
+          docker build -f ./phase2-portfolio/app/backend-v1/Dockerfile \
+            -t "$IMAGE" \
+            ./phase2-portfolio/app/backend-v1
+          docker push "$IMAGE"
+
+      - name: Build and push backend v2 image
+        run: |
+          IMAGE=${{ env.IMAGE_NAMESPACE }}/gc-devops-portfolio-backend-v2:${{ steps.id.outputs.sha_short }}
+          docker build -f ./phase2-portfolio/app/backend-v2/Dockerfile \
+            -t "$IMAGE" \
+            ./phase2-portfolio/app/backend-v2
+          docker push "$IMAGE"
+
+      - name: Build and push backend v3 image
+        run: |
+          IMAGE=${{ env.IMAGE_NAMESPACE }}/gc-devops-portfolio-backend-v3:${{ steps.id.outputs.sha_short }}
+          docker build -f ./phase2-portfolio/app/backend-v3/Dockerfile \
+            -t "$IMAGE" \
+            ./phase2-portfolio/app/backend-v3
+          docker push "$IMAGE"
+
+      - name: Install yq (yaml editor)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y python3-pip
+          pip3 install yq
+
+      - name: Update Helm values.yaml with new tags
+        id: update_values
+        run: |
+          SHA=${{ steps.id.outputs.sha_short }}
+          V_FE="${IMAGE_NAMESPACE}/gc-devops-portfolio-frontend:${SHA}"
+          V_B1="${IMAGE_NAMESPACE}/gc-devops-portfolio-backend-v1:${SHA}"
+          V_B2="${IMAGE_NAMESPACE}/gc-devops-portfolio-backend-v2:${SHA}"
+          V_B3="${IMAGE_NAMESPACE}/gc-devops-portfolio-backend-v3:${SHA}"
+          echo "Setting frontend tag to $V_FE"
+          echo "Setting backend v1 tag to $V_B1"
+          echo "Setting backend v2 tag to $V_B2"
+          echo "Setting backend v3 tag to $V_B3"
+
+          # Update values.yaml (assumes keys: frontend.tag, backend.v1.tag, backend.v2.tag, backend.v3.tag)
+          yq -i eval ".frontend.tag = \"${SHA}\"" "${{ env.HELM_VALUES_PATH }}"
+          yq -i eval ".backend.v1.tag = \"${SHA}\"" "${{ env.HELM_VALUES_PATH }}"
+          yq -i eval ".backend.v2.tag = \"${SHA}\"" "${{ env.HELM_VALUES_PATH }}"
+          yq -i eval ".backend.v3.tag = \"${SHA}\"" "${{ env.HELM_VALUES_PATH }}"
+
+          # (Optionally, you can store full image names instead of tags. We used tag=sha and images built from Chart using IMAGE_NAMESPACE.)
+          git --no-pager diff "${{ env.HELM_VALUES_PATH }}" || true
+          git status --porcelain
+
+      - name: Commit changed values.yaml
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: github-actions
+          author_email: actions@github.com
+          message: "ci: update Helm values with images @${{ steps.id.outputs.sha_short }}"
+          add: "${{ env.HELM_VALUES_PATH }}"
+          push: true
+
+      - name: Done notice
+        run: |
+          echo "Images pushed and values.yaml updated. ArgoCD should detect the change and sync (if auto-sync ON)."
