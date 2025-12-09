@@ -9,9 +9,11 @@ spec:
   gateways:
     - portfolio-gateway
   http:
+
+    # Backend routes
     - match:
         - uri:
-            prefix: /
+            prefix: /api
       route:
         {{- range .Values.backend.versions }}
         - destination:
@@ -19,4 +21,14 @@ spec:
             subset: {{ .name }}
           weight: {{ .weight }}
         {{- end }}
+
+    # Frontend route
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: portfolio-frontend
+            port:
+              number: 80
 {{- end }}

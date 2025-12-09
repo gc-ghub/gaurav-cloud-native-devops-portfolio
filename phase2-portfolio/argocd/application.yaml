@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/gc-ghub/gaurav-cloud-native-devops-portfolio.git
     targetRevision: main
-    path: helm/portfolio
+    path: phase2-portfolio/helm/portfolio
   destination:
     server: https://kubernetes.default.svc
     namespace: portfolio
