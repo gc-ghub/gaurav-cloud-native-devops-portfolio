@@ -1,0 +1,26 @@
+# Backend v2 Deployment #
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-v2
+  labels:
+    app: backend
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: backend
+        version: v2
+    spec:
+      containers:
+        - name: backend-v2
+          image: dockergc00/gc-devops-portfolio-backend-v2:v1
+          ports:
+            - containerPort: 5000

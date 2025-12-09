@@ -1,0 +1,38 @@
+#--- gaurav-cloud-native-devops-portfolio/phase1-mern-sample/k8s-manifests/backend.yaml ---#
+
+
+# Kubernetes Deployment and Service for Backend #
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend # This label should match the selector in the Service
+    spec:
+      containers:
+        - name: backend
+          image: dockergc00/mern-portfolio-backend:phase1
+          imagePullPolicy: Always # Always pull the latest image from docker hub
+          ports:
+            - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend # This selector should match the label in the Deployment pod template
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+  type: NodePort # Expose the backend service via NodePort because frontend needs to access it

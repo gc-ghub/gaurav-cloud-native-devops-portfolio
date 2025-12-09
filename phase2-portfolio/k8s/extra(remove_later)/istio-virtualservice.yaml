@@ -1,0 +1,27 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: portfolio-routing
+  namespace: prod
+spec:
+  hosts:
+    - "portfolio.dev"
+  gateways:
+    - portfolio-gateway
+  http:
+    - route:
+        - destination:
+            host: backend-v1.prod.svc.cluster.local
+            port:
+              number: 5000
+          weight: 50
+        - destination:
+            host: backend-v2.prod.svc.cluster.local
+            port:
+              number: 5000
+          weight: 30
+        - destination:
+            host: backend-v3.prod.svc.cluster.local
+            port:
+              number: 5000
+          weight: 20

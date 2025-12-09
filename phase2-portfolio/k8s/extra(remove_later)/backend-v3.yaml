@@ -1,0 +1,26 @@
+# Backend v3 Deployment #
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-v3
+  labels:
+    app: backend
+    version: v3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+      version: v3
+  template:
+    metadata:
+      labels:
+        app: backend
+        version: v3
+    spec:
+      containers:
+        - name: backend-v3
+          image: dockergc00/gc-devops-portfolio-backend-v3:v1
+          ports:
+            - containerPort: 5000

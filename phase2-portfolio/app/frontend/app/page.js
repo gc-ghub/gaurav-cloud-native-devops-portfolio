@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
+import PortfolioPage from "./components/PortfolioPage";
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -11,7 +12,10 @@ export default function Home() {
     axios
       .get("/api/backend")
       .then((res) => setData(res.data))
-      .catch((err) => setError(true));
+      .catch((err) => {
+        console.error(err);
+        setError(true);
+      });
   }, []);
 
   if (error)
@@ -28,28 +32,12 @@ export default function Home() {
       </div>
     );
 
-  const lightTheme = "bg-white text-black";
-  const darkTheme = "bg-gray-900 text-white";
-
-  const theme = data.theme === "dark" ? darkTheme : lightTheme;
-
   return (
-    <div className={`min-h-screen p-10 transition-all ${theme}`}>
-      <h1 className="text-4xl font-bold mb-4">
-        DevOps Portfolio — <span className="text-blue-500">{data.version}</span>
-      </h1>
-
-      <p className="text-xl mb-4">{data.intro}</p>
-
-      <h2 className="text-2xl font-semibold mt-6 mb-2">Skills</h2>
-
-      <ul className="list-disc pl-5">
-        {data.skills.map((skill, i) => (
-          <li key={i}>{skill}</li>
-        ))}
-      </ul>
-
-      <p className="mt-6 text-lg text-green-400">{data.message}</p>
-    </div>
+    <PortfolioPage
+      version={data.version}
+      hostname={data.hostname ?? "N/A"}
+      time={data.time ?? new Date().toLocaleString()}
+      color={data.color}
+    />
   );
 }

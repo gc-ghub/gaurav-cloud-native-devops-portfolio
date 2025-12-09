@@ -1,29 +1,58 @@
 # -------------------------------------------------------------------
-# Frontend - MERN (Next.js / React / Vite depending on your setup)
+# Node.js / npm
 # -------------------------------------------------------------------
+node_modules/
+npm-debug.log
+npm-debug.log*
+yarn-error.log
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# -------------------------------------------------------------------
+# Phase 1 - MERN Sample (Vite/React)
+# -------------------------------------------------------------------
+# Frontend
+phase1-mern-sample/frontend/node_modules/
+phase1-mern-sample/frontend/dist/
+phase1-mern-sample/frontend/.env
+phase1-mern-sample/frontend/.env.local
+phase1-mern-sample/frontend/.env.*.local
+
+# Backend
+phase1-mern-sample/backend/node_modules/
+phase1-mern-sample/backend/.env
+phase1-mern-sample/backend/npm-debug.log
+
+# -------------------------------------------------------------------
+# Phase 2 - Portfolio (Next.js + Multi-backend versions)
+# -------------------------------------------------------------------
+# Frontend (Next.js)
 phase2-portfolio/app/frontend/node_modules/
 phase2-portfolio/app/frontend/.next/
 phase2-portfolio/app/frontend/dist/
 phase2-portfolio/app/frontend/build/
 phase2-portfolio/app/frontend/out/
-phase2-portfolio/app/frontend/npm-debug.log
-phase2-portfolio/app/frontend/yarn-error.log
-
-# Environment files
 phase2-portfolio/app/frontend/.env
 phase2-portfolio/app/frontend/.env.local
 phase2-portfolio/app/frontend/.env.*.local
+phase2-portfolio/app/frontend/npm-debug.log
+phase2-portfolio/app/frontend/yarn-error.log
 
-# -------------------------------------------------------------------
-# Backend - Node/Express (v1 & v2)
-# -------------------------------------------------------------------
+# Backend v1
 phase2-portfolio/app/backend-v1/node_modules/
-phase2-portfolio/app/backend-v1/npm-debug.log
 phase2-portfolio/app/backend-v1/.env
+phase2-portfolio/app/backend-v1/npm-debug.log
 
+# Backend v2
 phase2-portfolio/app/backend-v2/node_modules/
-phase2-portfolio/app/backend-v2/npm-debug.log
 phase2-portfolio/app/backend-v2/.env
+phase2-portfolio/app/backend-v2/npm-debug.log
+
+# Backend v3
+phase2-portfolio/app/backend-v3/node_modules/
+phase2-portfolio/app/backend-v3/.env
+phase2-portfolio/app/backend-v3/npm-debug.log
 
 # -------------------------------------------------------------------
 # Kubernetes logs / local outputs
@@ -36,17 +65,30 @@ phase2-portfolio/app/backend-v2/.env
 # Ignore generated chart artifacts but NOT your chart sources
 # -------------------------------------------------------------------
 helm/*/charts/
+**/charts/
 
 # -------------------------------------------------------------------
 # Certificates / Keys (never commit secrets)
 # -------------------------------------------------------------------
 *.pem
 *.key
+*.crt
+*.csr
+*.p12
+*.pfx
 
 # -------------------------------------------------------------------
 # Docker
 # -------------------------------------------------------------------
 .dockerignore
+
+# -------------------------------------------------------------------
+# Environment & Secrets
+# -------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+.env.production.local
 
 # -------------------------------------------------------------------
 # OS / Editor junk files
@@ -55,8 +97,24 @@ helm/*/charts/
 Thumbs.db
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.sublime-project
+*.sublime-workspace
 
 # -------------------------------------------------------------------
-# Git internal (don’t remove!)
+# IDEs
+# -------------------------------------------------------------------
+.vscode
+.vscode/
+.idea/
+*.code-workspace
+
+# -------------------------------------------------------------------
+# Misc
 # -------------------------------------------------------------------
 .gitignore

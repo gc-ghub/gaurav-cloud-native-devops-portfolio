@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: portfolio-backend-vs
+  namespace: default
+spec:
+  hosts:
+    - portfolio-backend
+  http:
+    - match:
+        - uri:
+            prefix: /api
+      route:
+        - destination:
+            host: portfolio-backend
+            subset: v1
+          weight: 33
+        - destination:
+            host: portfolio-backend
+            subset: v2
+          weight: 33  
+        - destination:
+            host: portfolio-backend
+            subset: v3
+          weight: 34  

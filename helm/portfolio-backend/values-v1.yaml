@@ -1,7 +1,0 @@
-image:
-  repository: dockergc00/portfolio-backend
-  tag: "v1"
-
-labels:
-  app: portfolio-backend
-versionLabel: v1

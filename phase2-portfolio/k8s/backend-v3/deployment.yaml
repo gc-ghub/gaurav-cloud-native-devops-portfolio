@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-v3
+  labels:
+    app: portfolio-backend
+    version: v3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio-backend
+      version: v3
+  template:
+    metadata:
+      labels:
+        app: portfolio-backend
+        version: v3
+    spec:
+      containers:
+        - name: backend
+          image: dockergc00/gc-devops-portfolio-backend-v3:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
