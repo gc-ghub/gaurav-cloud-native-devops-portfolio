@@ -10,12 +10,12 @@ app.get("/api/data", (req, res) => {
 
   res.json({
     version: "v3",               
-    color: "#a41419ff",            
+    color: "#d5ffe6",            
     hostname: os.hostname(),
     time: new Date().toLocaleString(),
     random: Math.random().toString(36).slice(2, 8),
     weight: weight,
-    message: "🔥 Backend v3 says HELLO — latest code deployed!",
+    message: `🤖 Robo reporting from backend v3. Happily receiving ${weight}% of traffic.`,
   });
 });
 
