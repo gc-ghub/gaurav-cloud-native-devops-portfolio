@@ -1,28 +1,31 @@
-# Stage 1: Build the frontend using full dependency install
+# Stage 1 — Install dependencies and build Next.js
 FROM node:20-slim AS builder
 
 WORKDIR /app
 
-# Copy package.json and lock file
 COPY package*.json ./
-
-# Install ALL dependencies (including dev dependencies)
 RUN npm install
 
-# Copy the rest of the app code
 COPY . .
 
-# Build the Next.js app
-RUN npm run build
+# VERY IMPORTANT: Clean caches
+RUN rm -rf .next && npm run build
 
-# Stage 2: Serve the built app
-FROM node:20-slim
+# Stage 2 — Run the production build
+FROM node:20-slim AS runner
 
 WORKDIR /app
 
-# Only copy built artifacts and necessary files
-COPY --from=builder /app ./
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Copy only the built output
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+
+# Next.js needs node_modules for server components
+COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 3000
-
 CMD ["npm", "start"]
