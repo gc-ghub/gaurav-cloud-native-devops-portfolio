@@ -8,10 +8,10 @@ on:
 
 env:
   REGISTRY: docker.io/dockergc00
-  FRONTEND_IMAGE: gc-portfolio-frontend
-  BACKEND_V1_IMAGE: gc-portfolio-backend-v1
-  BACKEND_V2_IMAGE: gc-portfolio-backend-v2
-  BACKEND_V3_IMAGE: gc-portfolio-backend-v3
+  FRONTEND_IMAGE: gc-devops-portfolio-frontend
+  BACKEND_V1_IMAGE: gc-devops-portfolio-backend-v1
+  BACKEND_V2_IMAGE: gc-devops-portfolio-backend-v2
+  BACKEND_V3_IMAGE: gc-devops-portfolio-backend-v3
 
 jobs:
   build-and-push:
