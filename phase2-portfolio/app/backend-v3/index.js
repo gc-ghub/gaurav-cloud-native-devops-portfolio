@@ -10,9 +10,10 @@ app.use(cors());
 app.get("/api/data", (req, res) => {
   res.json({
     version: "v3",
-    color: "#d5f2ffff",         
+    color: "#d5ffe6",         
     hostname: os.hostname(),
     time: new Date().toLocaleString(),
+    note: "This is the backend version 3 responding.",
   });
 });
 

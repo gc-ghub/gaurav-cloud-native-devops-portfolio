@@ -12,6 +12,7 @@ app.get("/api/data", (req, res) => {
     color: "#d0e7ff",          
     hostname: os.hostname(),
     time: new Date().toLocaleString(),
+    note: "This is the backend version 1 responding.",
   });
 });
 

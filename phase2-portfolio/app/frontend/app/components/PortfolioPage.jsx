@@ -142,6 +142,7 @@ export default function PortfolioPage({ version, hostname, time, color }) {
 
         {/* BOTTOM META INFO */}
         <div style={metaStyle}>
+          <b>Note:</b> {note} <br />
           <b>Version:</b> {version} <br />
           <b>Host:</b> {hostname} <br />
           <b>Time:</b> {time}
