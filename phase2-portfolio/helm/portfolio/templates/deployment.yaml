@@ -18,13 +18,12 @@ spec:
         app: {{ .Values.frontend.name }}
     spec:
       containers:
-      - name: frontend
-        image: "{{ .Values.frontend.image }}:{{ .Values.frontend.tag }}"
-        ports:
-        - containerPort: {{ .Values.frontend.port }}
+        - name: frontend
+          image: "{{ .Values.frontend.image }}:{{ .Values.frontend.tag }}"
+          ports:
+            - containerPort: {{ .Values.frontend.port }}
 
 ---
-
 ############################################
 # BACKEND DEPLOYMENTS (v1, v2, v3)
 ############################################
@@ -49,12 +48,12 @@ spec:
         version: {{ .name }}
     spec:
       containers:
-      - name: backend
-        image: "{{ .image }}:{{ .tag }}"
-        ports:
-        - containerPort: {{ $.Values.backend.port }}
-        env:
-        - name: TRAFFIC_WEIGHT
-          value: "{{ .weight }}"
+        - name: backend
+          image: "{{ .image }}:{{ .tag }}"
+          ports:
+            - containerPort: {{ $.Values.backend.port }}
+          env:
+            - name: TRAFFIC_WEIGHT
+              value: "{{ .weight }}"
 ---
 {{- end }}
