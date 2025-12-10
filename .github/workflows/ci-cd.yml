@@ -1,0 +1,104 @@
+name: Portfolio CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: docker.io/dockergc00
+  FRONTEND_IMAGE: gc-portfolio-frontend
+  BACKEND_V1_IMAGE: gc-portfolio-backend-v1
+  BACKEND_V2_IMAGE: gc-portfolio-backend-v2
+  BACKEND_V3_IMAGE: gc-portfolio-backend-v3
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set Git SHA Tag
+      id: vars
+      run: echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    # --------------------------
+    # BUILD BACKEND v1
+    # --------------------------
+    - name: Build Backend v1
+      run: |
+        docker build \
+          -t $REGISTRY/$BACKEND_V1_IMAGE:${TAG} \
+          -f phase2-portfolio/backend-v1/Dockerfile \
+          .
+    - name: Push Backend v1
+      run: docker push $REGISTRY/$BACKEND_V1_IMAGE:${TAG}
+
+    # --------------------------
+    # BUILD BACKEND v2
+    # --------------------------
+    - name: Build Backend v2
+      run: |
+        docker build \
+          -t $REGISTRY/$BACKEND_V2_IMAGE:${TAG} \
+          -f phase2-portfolio/backend-v2/Dockerfile \
+          .
+    - name: Push Backend v2
+      run: docker push $REGISTRY/$BACKEND_V2_IMAGE:${TAG}
+
+    # --------------------------
+    # BUILD BACKEND v3
+    # --------------------------
+    - name: Build Backend v3
+      run: |
+        docker build \
+          -t $REGISTRY/$BACKEND_V3_IMAGE:${TAG} \
+          -f phase2-portfolio/backend-v3/Dockerfile \
+          .
+    - name: Push Backend v3
+      run: docker push $REGISTRY/$BACKEND_V3_IMAGE:${TAG}
+
+    # --------------------------
+    # BUILD FRONTEND
+    # --------------------------
+    - name: Build Frontend
+      run: |
+        docker build \
+          -t $REGISTRY/$FRONTEND_IMAGE:${TAG} \
+          -f phase2-portfolio/frontend/Dockerfile \
+          .
+    - name: Push Frontend
+      run: docker push $REGISTRY/$FRONTEND_IMAGE:${TAG}
+
+    # --------------------------
+    # UPDATE HELM VALUES
+    # --------------------------
+    - name: Install yq
+      run: sudo apt-get install -y jq && sudo wget -O /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && sudo chmod +x /usr/local/bin/yq
+
+    - name: Update Backend & Frontend Image Tags in Helm Chart
+      run: |
+        yq -i ".backend.v1.tag = \"${TAG}\"" helm/portfolio/values.yaml
+        yq -i ".backend.v2.tag = \"${TAG}\"" helm/portfolio/values.yaml
+        yq -i ".backend.v3.tag = \"${TAG}\"" helm/portfolio/values.yaml
+        yq -i ".frontend.tag = \"${TAG}\"" helm/portfolio/values.yaml
+
+    # --------------------------
+    # COMMIT CHANGES (GitOps)
+    # --------------------------
+    - name: Commit Helm Chart Updates
+      run: |
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git add helm/portfolio/values.yaml
+        git commit -m "Updated image tags to ${TAG}" || echo "No changes to commit"
+        git push
