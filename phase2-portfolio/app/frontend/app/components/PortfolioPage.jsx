@@ -90,7 +90,6 @@ export default function PortfolioPage({ version, hostname, time, color, weight, 
           <br />
           A passionate <b>DevOps Engineer</b> experienced with Terraform, Kubernetes, AWS,
           GitHub Actions, Docker, CI/CD, ArgoCD, Service Mesh, and cloud-native platforms.
-          Please explore my portfolio showcasing my projects and skills!
         </p>
 
         {/* ICON ROW — unchanged */}

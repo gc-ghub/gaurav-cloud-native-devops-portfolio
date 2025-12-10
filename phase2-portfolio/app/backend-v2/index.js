@@ -15,7 +15,7 @@ app.get("/api/data", (req, res) => {
     time: new Date().toLocaleString(),
     random: Math.random().toString(36).slice(2, 8),
     weight: weight,
-    message: `Hey, I'm backend v1 and I am configured to receive ${weight}% of traffic.`,
+    message: `Hey, I'm backend v2 and I am configured to receive ${weight}% of traffic.`,
   });
 });
 
