@@ -38,8 +38,7 @@ jobs:
       run: |
         docker build \
           -t $REGISTRY/$BACKEND_V1_IMAGE:${TAG} \
-          -f phase2-portfolio/app/backend-v1/Dockerfile \
-          .
+          phase2-portfolio/app/backend-v1
     - name: Push Backend v1
       run: docker push $REGISTRY/$BACKEND_V1_IMAGE:${TAG}
 
@@ -50,8 +49,7 @@ jobs:
       run: |
         docker build \
           -t $REGISTRY/$BACKEND_V2_IMAGE:${TAG} \
-          -f phase2-portfolio/app/backend-v2/Dockerfile \
-          .
+          phase2-portfolio/app/backend-v2
     - name: Push Backend v2
       run: docker push $REGISTRY/$BACKEND_V2_IMAGE:${TAG}
 
@@ -62,8 +60,7 @@ jobs:
       run: |
         docker build \
           -t $REGISTRY/$BACKEND_V3_IMAGE:${TAG} \
-          -f phase2-portfolio/app/backend-v3/Dockerfile \
-          .
+          phase2-portfolio/app/backend-v3
     - name: Push Backend v3
       run: docker push $REGISTRY/$BACKEND_V3_IMAGE:${TAG}
 
@@ -74,8 +71,7 @@ jobs:
       run: |
         docker build \
           -t $REGISTRY/$FRONTEND_IMAGE:${TAG} \
-          -f phase2-portfolio/app/frontend/Dockerfile \
-          .
+          phase2-portfolio/app/frontend
     - name: Push Frontend
       run: docker push $REGISTRY/$FRONTEND_IMAGE:${TAG}
 
