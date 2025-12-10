@@ -151,9 +151,18 @@ export default function PortfolioPage({ version, hostname, time, color, weight, 
 
         {/* NEW EXTRA INFO SECTION */}
         <div style={extraInfoStyle}>
-          {message && <p><b>Message:</b> {message}</p>}
-          {weight && <p><b>Traffic Weight:</b> {weight}%</p>}
-          {random && <p><b>Request ID:</b> {random}</p>}
+          {message && (
+  <p><b>Message:</b> {message}</p>
+)}
+
+{weight && (
+  <p><b>Traffic Weight:</b> {weight}%</p>
+)}
+
+{random && (
+  <p><b>Request ID:</b> {random}</p>
+)}
+
         </div>
 
         {/* BOTTOM META INFO */}
