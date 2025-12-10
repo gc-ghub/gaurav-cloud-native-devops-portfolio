@@ -1,6 +1,8 @@
-# 🚀 Cloud-Native DevOps Portfolio: MERN on AWS EKS with Istio & ArgoCD
+# 🚀 My Cloud-Native DevOps Portfolio based on MERN deployed on AWS EKS with Istio & ArgoCD
 
 A complete **production-ready Cloud-Native DevOps Portfolio** featuring a **MERN stack** application deployed on **AWS EKS** with advanced cloud-native technologies. This project demonstrates enterprise-grade microservices architecture, service mesh capabilities, GitOps practices, and CI/CD automation — inspired by Istio's Bookinfo Application but taken to the next level.
+
+---
 
 ## 📋 Table of Contents
 
@@ -40,6 +42,120 @@ This portfolio showcases a **real-world DevOps workflow** with:
 
 ---
 
+---
+
+## 📸 Screenshots & Analysis
+
+Below are screenshots and videos from the `docs/` directory showcasing the project in action — service mesh visualizations, GitOps deployments, canary traffic splitting, and multi-version backend services.
+
+### AWS EKS Cluster
+
+![AWS EKS Cluster - Overview](docs/AWS_EKS_Cluster-1.png)
+*AWS EKS Cluster infrastructure setup with managed Kubernetes control plane.*
+
+![AWS EKS Cluster - Nodes](docs/AWS_EKS_Cluster-2.png)
+*EKS worker nodes running portfolio application workloads.*
+
+![AWS EKS Cluster - Resources](docs/AWS_EKS_Cluster-3.png)
+*Cluster resources (deployments, services, pods) management view.*
+
+---
+
+### ArgoCD / GitOps
+
+The screenshots below show ArgoCD in action — application synchronization, resource health, and deployment tracking.
+
+![ArgoCD - Applications Overview](docs/ArgoCD-1.png)
+*ArgoCD Applications list showing sync status and health of portfolio deployment.*
+
+![ArgoCD - Sync Details](docs/ArgoCD-2.png)
+*ArgoCD sync operations, resource tree, and recent deployment history.*
+
+---
+
+### Backend Services (v1, v2, v3)
+
+The portfolio showcases three versioned backend services with different endpoints and visual indicators.
+
+![Backend v1 Response](docs/Backend_v1.png)
+*Backend v1 service response (70% traffic weight) with version identifier and hostname.*
+
+![Backend v2 Response](docs/Backend_v2.png)
+*Backend v2 service response (20% traffic weight) showing different output signature.*
+
+![Backend v3 Response](docs/Backend_v3.png)
+*Backend v3 service response (10% traffic weight) for canary testing and validation.*
+
+---
+
+### Istio / Kiali (Service Mesh Observability)
+
+Kiali provides real-time visualization of the service mesh, traffic flows, and performance metrics.
+
+![Kiali - Mesh Topology](docs/Istio_Kiali-1.png)
+*Kiali mesh topology overview showing services, pods, and interconnections.*
+
+![Kiali - Traffic Graph View 1](docs/Istio_Kiali-2.png)
+*Live traffic graph visualization between frontend and backend services.*
+
+![Kiali - Traffic Graph View 2](docs/Istio_Kiali-3.png)
+*Service-to-service communication patterns in real-time.*
+
+![Kiali - Workloads Display](docs/Istio_Kiali-4.png)
+*Kiali workloads panel showing all deployed services (v1, v2, v3).* 
+
+![Kiali - Performance Metrics](docs/Istio_Kiali-5.png)
+*Metrics dashboard displaying latency, error rates, and request volumes.*
+
+![Kiali - Service Details](docs/Istio_Kiali-6.png)
+*Detailed service information including version distribution and health status.*
+
+![Kiali - Traffic Distribution](docs/Istio_Kiali-7.png)
+*Traffic splitting visualization showing weighted routing percentages.*
+
+![Kiali - Canary Deployment View](docs/Istio_Kiali-8.png)
+*Canary deployment scenario with traffic gradually shifting between versions.*
+
+![Kiali - Error Analysis](docs/Istio_Kiali-9.png)
+*Error tracking and analysis across service mesh.*
+
+![Kiali - Advanced Metrics](docs/Istio_Kiali-10.png)
+*Advanced metrics panel with p99 latency and throughput analysis.*
+
+![Kiali - Mesh Health](docs/Istio_Kiali-11.png)
+*Overall mesh health status and service connectivity insights.*
+
+![Kiali - Circuit Breaker Status](docs/Istio_Kiali-12.png)
+*Circuit breaker and destination rule configurations in action.*
+
+---
+
+### Canary Traffic Splitting Demos
+
+The videos below demonstrate live canary deployments with traffic shifting between backend versions.
+
+**Demo 1 (External User#1): Traffic Distribution (70/20/10)**
+
+<video width="100%" controls>
+  <source src="docs/Canary_Traffic_Splitting_demo-1.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+*Canary_Traffic_Splitting_demo-1.mp4 — Shows initial weighted load distribution (v1: 70%, v2: 20%, v3: 10%) across backend services with real-time traffic visualization in Kiali.*
+
+---
+
+**Demo 2 (External User#2): Traffic Distribution (70/20/10)**
+
+<video width="100%" controls>
+  <source src="docs/Canary_Traffic_Splitting_demo-2.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+*Canary_Traffic_Splitting_demo-2.mp4 — hows initial weighted load distribution (v1: 70%, v2: 20%, v3: 10%) across backend services with real-time traffic visualization in Kiali.*
+
+---
+
 ## 🏗️ Architecture
 
 This project demonstrates a complete cloud-native architecture with:
@@ -59,117 +175,8 @@ User Request → Istio Ingress Gateway → VirtualService (weighted routing) →
 
 ## 🔄 Complete CI/CD & Deployment Flow
 
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                           CLOUD-NATIVE DEVOPS WORKFLOW                                 │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-
-┌─────────────┐
-│   GitHub    │
-│  (Source)   │  ← Developer pushes code to repo
-└──────┬──────┘
-       │
-       │ (Webhook trigger)
-       ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    GitHub Actions (CI/CD)                       │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │  1. Checkout code                                        │   │
-│  │  2. Build Docker image (multi-platform)                  │   │
-│  │  3. Login to Docker Hub                                  │   │
-│  │  4. Push image: dockergc00/gc-devops-portfolio-backend   │   │
-│  │  5. Update values.yaml with new tag                      │   │
-│  │  6. Commit & Push changes back to Git                    │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-       │
-       │ (New image pushed)
-       ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                  Docker Hub (Container Registry)                │
-│              (Image: gc-devops-portfolio-backend-v1)            │
-└─────────────────────────────────────────────────────────────────┘
-       │
-       │ (Git repo updated)
-       ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      ArgoCD (GitOps)                            │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │  1. Watches Git repository (main branch)                 │   │ 
-│  │  2. Detects changes in Helm values                       │   │
-│  │  3. Renders Helm templates                               │   │
-│  │  4. Syncs desired state to cluster                       │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-       │
-       │ (Deploy command)
-       ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    AWS EKS Cluster                              │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                   Kubernetes Namespace                   │   │
-│  │                    (portfolio)                           │   │
-│  │  ┌─────────────────────────────────────────────────┐     │   │
-│  │  │     Istio Ingress Gateway & Service Mesh        │     │   │
-│  │  │  (Traffic Management, mTLS, Rate Limiting)      │     │   │
-│  │  └─────────────────────────────────────────────────┘     │   │
-│  │                        ↓                                 │   │
-│  │  ┌─────────────────────────────────────────────────┐     │   │
-│  │  │     Virtual Service (Weighted Routing)          │     │   │ 
-│  │  │  v1: 70% | v2: 20% | v3: 10%                    │     │   │
-│  │  └─────────────────────────────────────────────────┘     │   │
-│  │                        ↓                                 │   │
-│  │  ┌────────────┐  ┌────────────┐  ┌────────────┐          │   │
-│  │  │ Frontend   │  │ Backend v1 │  │ Backend v2 │          │   │
-│  │  │ (Next.js)  │  │  (Express) │  │  (Express) │          │   │
-│  │  └────────────┘  └────────────┘  └────────────┘          │   │
-│  │                                                          │   │
-│  │                    ┌────────────┐                        │   │
-│  │                    │ Backend v3 │                        │   │
-│  │                    │ (Express)  │                        │   │
-│  │                    └────────────┘                        │   │
-│  │                                                          │   │
-│  │  ┌──────────────────────────────────────────────────┐    │   │
-│  │  │    Observability Stack                           │    │   │
-│  │  │  ┌──────────┐ ┌────────┐ ┌──────────────┐        │    │   │
-│  │  │  │Prometheus│ │Grafana │ │    Kiali     │        │    │   │
-│  │  │  │ (Metrics)│ │(Charts)│ │  (Mesh UI)   │        │    │   │
-│  │  │  └──────────┘ └────────┘ └──────────────┘        │    │   │
-│  │  └──────────────────────────────────────────────────┘    │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-       │
-       │ (Live traffic with canary monitoring)
-       ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                  End User / Client                              │
-│              (http://portfolio.example.com)                     │
-│           Sees frontend with backend responses                  │
-└─────────────────────────────────────────────────────────────────┘
-
-CONTINUOUS LOOP: Code change → Build → Push → GitOps Sync → Deploy → Monitor
-```
 
 ---
-
-## 🛠️ Tech Stack
-
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| **Container Orchestration** | AWS EKS (Kubernetes 1.27+) | Managed Kubernetes cluster |
-| **Container Runtime** | Docker | Application containerization |
-| **Frontend** | Next.js 16, React 19, Tailwind CSS | Modern web UI |
-| **Backend** | Node.js, Express | REST API servers |
-| **Service Mesh** | Istio 1.16+ | Traffic management & observability |
-| **API Gateway** | Istio Ingress Gateway | Traffic ingress & routing |
-| **Package Manager** | Helm 3 | Kubernetes package management |
-| **GitOps** | ArgoCD | Declarative continuous deployment |
-| **CI/CD** | GitHub Actions | Automated build & push pipelines |
-| **Metrics** | Prometheus | Metrics collection & storage |
-| **Visualization** | Grafana | Metrics dashboards |
-| **Service Mesh UI** | Kiali | Traffic visualization & debugging |
-| **DNS** | CoreDNS | Service discovery |
-| **Storage** | EBS Volumes | Persistent storage |
 | **Configuration** | YAML, Helm Charts | Infrastructure as Code |
 
 ---
@@ -833,116 +840,6 @@ istioctl analyze
 ```
 
 ---
-
-## 📸 Screenshots & Analysis
-
-Below are screenshots and videos from the `docs/` directory showcasing the project in action — service mesh visualizations, GitOps deployments, canary traffic splitting, and multi-version backend services.
-
-### AWS EKS Cluster
-
-![AWS EKS Cluster - Overview](docs/AWS_EKS_Cluster-1.png)
-*AWS EKS Cluster infrastructure setup with managed Kubernetes control plane.*
-
-![AWS EKS Cluster - Nodes](docs/AWS_EKS_Cluster-2.png)
-*EKS worker nodes running portfolio application workloads.*
-
-![AWS EKS Cluster - Resources](docs/AWS_EKS_Cluster-3.png)
-*Cluster resources (deployments, services, pods) management view.*
-
----
-
-### ArgoCD / GitOps
-
-The screenshots below show ArgoCD in action — application synchronization, resource health, and deployment tracking.
-
-![ArgoCD - Applications Overview](docs/ArgoCD-1.png)
-*ArgoCD Applications list showing sync status and health of portfolio deployment.*
-
-![ArgoCD - Sync Details](docs/ArgoCD-2.png)
-*ArgoCD sync operations, resource tree, and recent deployment history.*
-
----
-
-### Backend Services (v1, v2, v3)
-
-The portfolio showcases three versioned backend services with different endpoints and visual indicators.
-
-![Backend v1 Response](docs/Backend_v1.png)
-*Backend v1 service response (70% traffic weight) with version identifier and hostname.*
-
-![Backend v2 Response](docs/Backend_v2.png)
-*Backend v2 service response (20% traffic weight) showing different output signature.*
-
-![Backend v3 Response](docs/Backend_v3.png)
-*Backend v3 service response (10% traffic weight) for canary testing and validation.*
-
----
-
-### Istio / Kiali (Service Mesh Observability)
-
-Kiali provides real-time visualization of the service mesh, traffic flows, and performance metrics.
-
-![Kiali - Mesh Topology](docs/Istio_Kiali-1.png)
-*Kiali mesh topology overview showing services, pods, and interconnections.*
-
-![Kiali - Traffic Graph View 1](docs/Istio_Kiali-2.png)
-*Live traffic graph visualization between frontend and backend services.*
-
-![Kiali - Traffic Graph View 2](docs/Istio_Kiali-3.png)
-*Service-to-service communication patterns in real-time.*
-
-![Kiali - Workloads Display](docs/Istio_Kiali-4.png)
-*Kiali workloads panel showing all deployed services (v1, v2, v3).*
-
-![Kiali - Performance Metrics](docs/Istio_Kiali-5.png)
-*Metrics dashboard displaying latency, error rates, and request volumes.*
-
-![Kiali - Service Details](docs/Istio_Kiali-6.png)
-*Detailed service information including version distribution and health status.*
-
-![Kiali - Traffic Distribution](docs/Istio_Kiali-7.png)
-*Traffic splitting visualization showing weighted routing percentages.*
-
-![Kiali - Canary Deployment View](docs/Istio_Kiali-8.png)
-*Canary deployment scenario with traffic gradually shifting between versions.*
-
-![Kiali - Error Analysis](docs/Istio_Kiali-9.png)
-*Error tracking and analysis across service mesh.*
-
-![Kiali - Advanced Metrics](docs/Istio_Kiali-10.png)
-*Advanced metrics panel with p99 latency and throughput analysis.*
-
-![Kiali - Mesh Health](docs/Istio_Kiali-11.png)
-*Overall mesh health status and service connectivity insights.*
-
-![Kiali - Circuit Breaker Status](docs/Istio_Kiali-12.png)
-*Circuit breaker and destination rule configurations in action.*
-
----
-
-### Canary Traffic Splitting Demos
-
-The videos below demonstrate live canary deployments with traffic shifting between backend versions.
-
-**Demo 1 (External User#1): Traffic Distribution (70/20/10)**
-
-<video width="100%" controls>
-  <source src="docs/Canary_Traffic_Splitting_demo-1.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-*Canary_Traffic_Splitting_demo-1.mp4 — Shows initial weighted load distribution (v1: 70%, v2: 20%, v3: 10%) across backend services with real-time traffic visualization in Kiali.*
-
----
-
-**Demo 2 (External User#2): Traffic Distribution (70/20/10)**
-
-<video width="100%" controls>
-  <source src="docs/Canary_Traffic_Splitting_demo-2.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-*Canary_Traffic_Splitting_demo-2.mp4 — hows initial weighted load distribution (v1: 70%, v2: 20%, v3: 10%) across backend services with real-time traffic visualization in Kiali.*
 
 ---
 
