@@ -1,14 +1,12 @@
 # Default values for portfolio. 
 # These values will be used in the Helm chart templates.
 
-replicaCount: 1 
-
+replicaCount: 1
 frontend:
   name: portfolio-frontend
   image: dockergc00/gc-devops-portfolio-frontend
-  tag: v2
+  tag: f29af4a
   port: 3000
-
 backend:
   name: portfolio-backend
   port: 5000
@@ -25,7 +23,12 @@ backend:
       image: dockergc00/gc-devops-portfolio-backend-v3
       tag: v1
       weight: 10
-
-istio: 
+  v1:
+    tag: f29af4a
+  v2:
+    tag: f29af4a
+  v3:
+    tag: f29af4a
+istio:
   enabled: true # Enable Istio integration important for traffic management
   gatewayHost: "*"
