@@ -37,8 +37,9 @@ jobs:
     - name: Build Backend v1
       run: |
         docker build --no-cache\
-          -t $REGISTRY/$BACKEND_V1_IMAGE:${TAG} \
-          phase2-portfolio/app/backend-v1
+        -t $REGISTRY/$BACKEND_V1_IMAGE:${TAG} \
+        -f phase2-portfolio/app/backend-v1/Dockerfile \
+        phase2-portfolio/app/backend-v1
     - name: Push Backend v1
       run: docker push $REGISTRY/$BACKEND_V1_IMAGE:${TAG}
 
@@ -48,8 +49,9 @@ jobs:
     - name: Build Backend v2
       run: |
         docker build --no-cache\
-          -t $REGISTRY/$BACKEND_V2_IMAGE:${TAG} \
-          phase2-portfolio/app/backend-v2
+        -t $REGISTRY/$BACKEND_V2_IMAGE:${TAG} \
+        -f phase2-portfolio/app/backend-v2/Dockerfile \
+        phase2-portfolio/app/backend-v2
     - name: Push Backend v2
       run: docker push $REGISTRY/$BACKEND_V2_IMAGE:${TAG}
 
@@ -59,8 +61,9 @@ jobs:
     - name: Build Backend v3
       run: |
         docker build --no-cache\
-          -t $REGISTRY/$BACKEND_V3_IMAGE:${TAG} \
-          phase2-portfolio/app/backend-v3
+        -t $REGISTRY/$BACKEND_V3_IMAGE:${TAG} \
+        -f phase2-portfolio/app/backend-v3/Dockerfile \
+        phase2-portfolio/app/backend-v3
     - name: Push Backend v3
       run: docker push $REGISTRY/$BACKEND_V3_IMAGE:${TAG}
 
