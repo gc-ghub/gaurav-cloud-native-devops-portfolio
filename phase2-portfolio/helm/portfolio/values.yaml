@@ -5,7 +5,7 @@ replicaCount: 1
 frontend:
   name: portfolio-frontend
   image: dockergc00/gc-devops-portfolio-frontend
-  tag: a2c6816
+  tag: 846de9d
   port: 3000
 backend:
   name: portfolio-backend
@@ -24,11 +24,11 @@ backend:
       tag: v1
       weight: 10
   v1:
-    tag: a2c6816
+    tag: 846de9d
   v2:
-    tag: a2c6816
+    tag: 846de9d
   v3:
-    tag: a2c6816
+    tag: 846de9d
 istio:
   enabled: true # Enable Istio integration important for traffic management
   gatewayHost: "*"
