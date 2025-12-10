@@ -86,10 +86,11 @@ jobs:
 
     - name: Update Backend & Frontend Image Tags in Helm Chart
       run: |
-        yq -i ".backend.v1.tag = \"${TAG}\"" helm/portfolio/values.yaml
-        yq -i ".backend.v2.tag = \"${TAG}\"" helm/portfolio/values.yaml
-        yq -i ".backend.v3.tag = \"${TAG}\"" helm/portfolio/values.yaml
-        yq -i ".frontend.tag = \"${TAG}\"" helm/portfolio/values.yaml
+        yq -i ".backend.v1.tag = \"${TAG}\"" phase2-portfolio/helm/portfolio/values.yaml
+        yq -i ".backend.v2.tag = \"${TAG}\"" phase2-portfolio/helm/portfolio/values.yaml
+        yq -i ".backend.v3.tag = \"${TAG}\"" phase2-portfolio/helm/portfolio/values.yaml
+        yq -i ".frontend.tag = \"${TAG}\"" phase2-portfolio/helm/portfolio/values.yaml
+
 
     # --------------------------
     # COMMIT CHANGES (GitOps)
