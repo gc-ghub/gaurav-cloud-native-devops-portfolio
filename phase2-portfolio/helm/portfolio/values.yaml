@@ -4,7 +4,7 @@ replicaCount: 1
 frontend:
   name: portfolio-frontend
   image: dockergc00/gc-devops-portfolio-frontend
-  tag: 2f4c620
+  tag: 25195ba
   port: 3000
 backend:
   name: portfolio-backend
@@ -23,11 +23,11 @@ backend:
       tag: 7753c0b
       weight: 10
   v1:
-    tag: 2f4c620
+    tag: 25195ba
   v2:
-    tag: 2f4c620
+    tag: 25195ba
   v3:
-    tag: 2f4c620
+    tag: 25195ba
 istio:
   enabled: true
   gatewayHost: "*"
