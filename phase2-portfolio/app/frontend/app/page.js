@@ -12,10 +12,7 @@ export default function Home() {
     axios
       .get("/api/data")
       .then((res) => setData(res.data))
-      .catch((err) => {
-        console.error(err);
-        setError(true);
-      });
+      .catch(() => setError(true));
   }, []);
 
   if (error)
@@ -35,9 +32,12 @@ export default function Home() {
   return (
     <PortfolioPage
       version={data.version}
-      hostname={data.hostname ?? "N/A"}
-      time={data.time ?? new Date().toLocaleString()}
+      hostname={data.hostname}
+      time={data.time}
       color={data.color}
+      weight={data.weight}
+      message={data.message}
+      random={data.random}
     />
   );
 }

@@ -1,10 +1,10 @@
-export default function PortfolioPage({ version, hostname, time, color }) {
+export default function PortfolioPage({ version, hostname, time, color, weight, message, random }) {
   // background-color is dynamic based on backend-provided color
   const pageStyle = {
     margin: 0,
     padding: 0,
     fontFamily: "Arial, sans-serif",
-    backgroundColor: "#f5efff", // default (v3)
+    backgroundColor: "#f5efff", 
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -32,9 +32,9 @@ export default function PortfolioPage({ version, hostname, time, color }) {
   };
 
   const spanStyle = {
-  color: "#158b08ff",
-  fontWeight: "bold",
-};
+    color: "#158b08ff",
+    fontWeight: "bold",
+  };
 
   const subtitleStyle = {
     fontSize: "30px",
@@ -64,26 +64,36 @@ export default function PortfolioPage({ version, hostname, time, color }) {
     color: "#444",
   };
 
+  const extraInfoStyle = {
+    marginTop: "20px",
+    fontSize: "18px",
+    color: "#333",
+    lineHeight: 1.5,
+  };
+
   return (
     <div style={pageStyle}>
       <div style={containerStyle}>
         
+        {/* TITLE */}
         <h1 style={h1Style}>
           DevOps Portfolio — <span style={spanStyle}>{version}</span>
         </h1>
 
+        {/* NAME */}
         <h2 style={h2Style}>
           Hi all 👋 I'm <b>Gaurav</b>
         </h2>
 
+        {/* INTRO MESSAGE */}
         <p className="subtitle" style={subtitleStyle}>
-            <br />
+          <br />
           A passionate <b>DevOps Engineer</b> experienced with Terraform, Kubernetes, AWS,
           GitHub Actions, Docker, CI/CD, ArgoCD, Service Mesh, and cloud-native platforms.
           Please explore my portfolio showcasing my projects and skills!
         </p>
 
-        {/* ICON ROW */}
+        {/* ICON ROW — unchanged */}
         <div style={iconsStyle}>
           <a href="https://github.com/gc-ghub" target="_blank">
             <img
@@ -138,6 +148,13 @@ export default function PortfolioPage({ version, hostname, time, color }) {
               style={iconImage}
             />
           </a>
+        </div>
+
+        {/* NEW EXTRA INFO SECTION */}
+        <div style={extraInfoStyle}>
+          {message && <p><b>Message:</b> {message}</p>}
+          {weight && <p><b>Traffic Weight:</b> {weight}%</p>}
+          {random && <p><b>Request ID:</b> {random}</p>}
         </div>
 
         {/* BOTTOM META INFO */}

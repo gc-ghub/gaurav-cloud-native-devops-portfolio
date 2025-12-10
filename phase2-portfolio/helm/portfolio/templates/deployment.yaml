@@ -53,5 +53,8 @@ spec:
         image: "{{ .image }}:{{ .tag }}"
         ports:
         - containerPort: {{ $.Values.backend.port }}
+        env:
+        - name: TRAFFIC_WEIGHT
+          value: "{{ .weight }}"
 ---
 {{- end }}
