@@ -10,7 +10,7 @@ app.use(cors());
 app.get("/api/data", (req, res) => {
   res.json({
     version: "v3",
-    color: "#d5ffe6",         
+    color: "#d5f2ffff",         
     hostname: os.hostname(),
     time: new Date().toLocaleString(),
   });
