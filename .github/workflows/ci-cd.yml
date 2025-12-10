@@ -99,6 +99,6 @@ jobs:
       run: |
         git config --local user.name "github-actions[bot]"
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git add helm/portfolio/values.yaml
+        git add phase2-portfolio/helm/portfolio/values.yaml
         git commit -m "Updated image tags to ${TAG}" || echo "No changes to commit"
         git push
